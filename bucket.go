@@ -37,7 +37,7 @@ func New[T any](fn func(context.Context, []T) error, opts ...Option) *Bucket[T] 
 //   - If the data is empty, it will return nil.
 //   - If the ProcessCount is 1, it will process the data sequentially.
 //   - If the ProcessCount is more than 1, it will process the data concurrently.
-//   - The bucket size will be calculated by len(data) / ProcessCount.
+//   - The bucket size will be calculated by len(data) / ProcessCount, if not divisible, it will be rounded up. 10/3 -> 4 that means 4,4,2 buckets.
 //   - If the bucket size is less than MinSize, it will be set to MinSize.
 //   - If the bucket size is more than MaxSize, it will be set to MaxSize.
 //   - The function will return an error if any of the bucket processing returns an error.
@@ -66,6 +66,10 @@ func (b *Bucket[T]) Process(ctx context.Context, data []T) error {
 
 func getBucketSize(totalItem, minSize, maxSize, processCount int) int {
 	bucketSize := totalItem / processCount
+
+	if totalItem%processCount != 0 {
+		bucketSize++
+	}
 
 	if bucketSize < minSize {
 		bucketSize = minSize

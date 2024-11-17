@@ -34,7 +34,7 @@ func Test_getBucketSize(t *testing.T) {
 				maxSize:      10,
 				processCount: 3,
 			},
-			want: 3,
+			want: 4,
 		},
 		{
 			name: "maxSize 2",

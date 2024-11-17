@@ -26,7 +26,7 @@ processBucket := bucket.New(process,
     bucket.WithMaxSize(100),
 )
 
-// 10 items -> 10/4 -> 2 items per bucket
+// 10 items -> 10/4 -> 3 items per bucket, 3,3,3,1 will be processed in 4 gorutine
 data := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 
 // processBucket returns error of process function
