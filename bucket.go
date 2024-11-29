@@ -49,6 +49,19 @@ func (b *Bucket[T]) Process(ctx context.Context, data []T) error {
 	processCount := b.ProcessCount
 	bucketSize := getBucketSize(len(data), b.MinSize, b.MaxSize, processCount)
 
+	if processCount == 1 {
+		// bucketing data and call function
+		for i := 0; i < len(data); i += bucketSize {
+			index := i
+
+			if err := b.Callback(ctx, data[index:min(index+bucketSize, len(data))]); err != nil {
+				return err
+			}
+		}
+
+		return nil
+	}
+
 	g, ctx := errgroup.WithContext(ctx)
 	g.SetLimit(processCount)
 
