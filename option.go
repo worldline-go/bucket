@@ -6,16 +6,6 @@ type option struct {
 	MinSize      int
 }
 
-func (o *option) setDefault() {
-	if o.ProcessCount <= 0 {
-		o.ProcessCount = 1
-	}
-
-	if o.MinSize <= 0 {
-		o.MinSize = 1
-	}
-}
-
 type Option func(o *option)
 
 func apply(opts []Option) option {
@@ -23,8 +13,6 @@ func apply(opts []Option) option {
 	for _, opt := range opts {
 		opt(&o)
 	}
-
-	o.setDefault()
 
 	return o
 }

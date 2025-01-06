@@ -25,6 +25,12 @@ func ExampleBucket() {
 		bucket.WithProcessCount(4),
 		bucket.WithMinSize(2),
 		bucket.WithMaxSize(100),
+		// or give with config
+		bucket.Config{
+			ProcessCount: 4,
+			MinSize:      2,
+			MaxSize:      100,
+		}.ToOption(),
 	)
 
 	// 10 items -> 10/4 -> 3 items per bucket

@@ -7,29 +7,21 @@ import (
 )
 
 type Bucket[T any] struct {
-	// ProcessCount is the maximum number of processes that will be run concurrently.
-	//   - Default is 1, which means the data will be processed sequentially.
-	ProcessCount int
-
-	// MaxSize is the maximum size of the bucket, bucket size calculated by len(data) / ProcessCount.
-	//   - Default no limit.
-	MaxSize int
-	// MinSize is the minimum size of the bucket, if the bucket size is less than MinSize, it will be set to MinSize.
-	//   - Default is 1, which means the minimum size of the bucket is 1.
-	MinSize int
-
-	// Callback is the function that will be called for each bucket.
-	Callback func(context.Context, []T) error
+	// callback is the function that will be called for each bucket.
+	callback func(context.Context, []T) error
+	// size return bucket size with the given total item.
+	size         func(int) int
+	processCount int
 }
 
 func New[T any](fn func(context.Context, []T) error, opts ...Option) *Bucket[T] {
 	o := apply(opts)
+	size := bucketSizer(o)
 
 	return &Bucket[T]{
-		ProcessCount: o.ProcessCount,
-		MaxSize:      o.MaxSize,
-		MinSize:      o.MinSize,
-		Callback:     fn,
+		callback:     fn,
+		size:         size,
+		processCount: o.ProcessCount,
 	}
 }
 
@@ -46,15 +38,14 @@ func (b *Bucket[T]) Process(ctx context.Context, data []T) error {
 		return nil
 	}
 
-	processCount := b.ProcessCount
-	bucketSize := getBucketSize(len(data), b.MinSize, b.MaxSize, processCount)
+	bucketSize := b.size(len(data))
 
-	if processCount == 1 {
+	if b.processCount == 1 || len(data) <= bucketSize {
 		// bucketing data and call function
 		for i := 0; i < len(data); i += bucketSize {
 			index := i
 
-			if err := b.Callback(ctx, data[index:min(index+bucketSize, len(data))]); err != nil {
+			if err := b.callback(ctx, data[index:min(index+bucketSize, len(data))]); err != nil {
 				return err
 			}
 		}
@@ -63,32 +54,16 @@ func (b *Bucket[T]) Process(ctx context.Context, data []T) error {
 	}
 
 	g, ctx := errgroup.WithContext(ctx)
-	g.SetLimit(processCount)
+	g.SetLimit(b.processCount)
 
 	// bucketing data and call function
 	for i := 0; i < len(data); i += bucketSize {
 		index := i
 
 		g.Go(func() error {
-			return b.Callback(ctx, data[index:min(index+bucketSize, len(data))])
+			return b.callback(ctx, data[index:min(index+bucketSize, len(data))])
 		})
 	}
 
 	return g.Wait()
-}
-
-func getBucketSize(totalItem, minSize, maxSize, processCount int) int {
-	bucketSize := totalItem / processCount
-
-	if totalItem%processCount != 0 {
-		bucketSize++
-	}
-
-	if bucketSize < minSize {
-		bucketSize = minSize
-	} else if maxSize > 0 && bucketSize > maxSize {
-		bucketSize = maxSize
-	}
-
-	return bucketSize
 }
