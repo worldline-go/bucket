@@ -1,16 +1,16 @@
 # bucket 🪣
 
-[![License](https://img.shields.io/github/license/rakunlabs/bucket?color=red&style=flat-square)](https://raw.githubusercontent.com/rakunlabs/bucket/main/LICENSE)
-[![Coverage](https://img.shields.io/sonar/coverage/rakunlabs_bucket?logo=sonarcloud&server=https%3A%2F%2Fsonarcloud.io&style=flat-square)](https://sonarcloud.io/summary/overall?id=rakunlabs_bucket)
-[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/rakunlabs/bucket/test.yml?branch=main&logo=github&style=flat-square&label=ci)](https://github.com/rakunlabs/bucket/actions)
-[![Go Report Card](https://goreportcard.com/badge/github.com/rakunlabs/bucket?style=flat-square)](https://goreportcard.com/report/github.com/rakunlabs/bucket)
-[![Go PKG](https://raw.githubusercontent.com/rakunlabs/.github/main/assets/badges/gopkg.svg)](https://pkg.go.dev/github.com/rakunlabs/bucket)
+[![License](https://img.shields.io/github/license/worldline-go/bucket?color=red&style=flat-square)](https://raw.githubusercontent.com/worldline-go/bucket/main/LICENSE)
+[![Coverage](https://img.shields.io/sonar/coverage/worldline-go_bucket?logo=sonarcloud&server=https%3A%2F%2Fsonarcloud.io&style=flat-square)](https://sonarcloud.io/summary/overall?id=worldline-go_bucket)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/worldline-go/bucket/test.yml?branch=main&logo=github&style=flat-square&label=ci)](https://github.com/worldline-go/bucket/actions)
+[![Go Report Card](https://goreportcard.com/badge/github.com/worldline-go/bucket?style=flat-square)](https://goreportcard.com/report/github.com/worldline-go/bucket)
+[![Go PKG](https://raw.githubusercontent.com/worldline-go/guide/main/badge/custom/reference.svg)](https://pkg.go.dev/github.com/worldline-go/bucket)
 
 Bucket call a function with limited size of gorutine and data count.  
 Size of data calculated by `len(data) / processCount` with minimum and maximum size configurations.
 
 ```sh
-go get github.com/rakunlabs/bucket
+go get github.com/worldline-go/bucket
 ```
 
 > This package based on [golang.org/x/sync/errgroup](https://pkg.go.dev/golang.org/x/sync/errgroup).

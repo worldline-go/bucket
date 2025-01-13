@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"sync/atomic"
 
-	"github.com/rakunlabs/bucket"
+	"github.com/worldline-go/bucket"
 )
 
 func ExampleBucket() {

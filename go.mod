@@ -1,4 +1,4 @@
-module github.com/rakunlabs/bucket
+module github.com/worldline-go/bucket
 
 go 1.21
 

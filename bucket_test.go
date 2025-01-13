@@ -6,7 +6,7 @@ import (
 	"sync/atomic"
 	"testing"
 
-	"github.com/rakunlabs/bucket"
+	"github.com/worldline-go/bucket"
 )
 
 func TestBucket(t *testing.T) {
