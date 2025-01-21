@@ -13,6 +13,7 @@ func ExampleBucket() {
 	process := func(ctx context.Context, data []int) error {
 		// do something with data
 		// fmt.Println(data)
+		// fmt.Println(bucket.CtxIndex(ctx))
 
 		for _, v := range data {
 			atomic.AddInt64(&totalCount, int64(v))
@@ -33,7 +34,7 @@ func ExampleBucket() {
 		}.ToOption(),
 	)
 
-	// 10 items -> 10/4 -> 3 items per bucket
+	// 10 items -> 10/4 -> 3 items per bucket, 3,3,3,1 will be processed in 4 gorutine
 	data := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 
 	// process data

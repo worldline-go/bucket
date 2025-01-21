@@ -45,7 +45,9 @@ func (b *Bucket[T]) Process(ctx context.Context, data []T) error {
 		for i := 0; i < len(data); i += bucketSize {
 			index := i
 
-			if err := b.callback(ctx, data[index:min(index+bucketSize, len(data))]); err != nil {
+			ctxProcess := withIndex(ctx, index)
+
+			if err := b.callback(ctxProcess, data[index:min(index+bucketSize, len(data))]); err != nil {
 				return err
 			}
 		}
@@ -60,8 +62,10 @@ func (b *Bucket[T]) Process(ctx context.Context, data []T) error {
 	for i := 0; i < len(data); i += bucketSize {
 		index := i
 
+		ctxProcess := withIndex(ctx, index)
+
 		g.Go(func() error {
-			return b.callback(ctx, data[index:min(index+bucketSize, len(data))])
+			return b.callback(ctxProcess, data[index:min(index+bucketSize, len(data))])
 		})
 	}
 

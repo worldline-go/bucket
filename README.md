@@ -34,3 +34,5 @@ if err := processBucket.Process(context.Background(), data); err != nil {
     return err
 }
 ```
+
+Get original begin index for process batch with `bucket.CtxIndex(ctx)`.
