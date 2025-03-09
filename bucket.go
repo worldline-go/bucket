@@ -16,6 +16,15 @@ type Bucket[T any] struct {
 
 func New[T any](opts ...Option) *Bucket[T] {
 	o := apply(opts)
+
+	if o.MinSize <= 0 {
+		o.MinSize = 1
+	}
+
+	if o.ProcessCount <= 0 {
+		o.ProcessCount = 1
+	}
+
 	size := bucketSizer(o)
 
 	return &Bucket[T]{
