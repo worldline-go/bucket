@@ -20,11 +20,16 @@ go get github.com/worldline-go/bucket
 Bucket accepts a function with signature `func(context.Context, []T) error`.
 
 ```go
-processBucket := bucket.New(process,
+processBucket := bucket.New(
     bucket.WithProcessCount(4),
     bucket.WithMinSize(2),
     bucket.WithMaxSize(100),
 )
+
+processBucket = processBucket.CallBack(func(ctx context.Context, data []int) error {
+    fmt.Println("process", data)
+    return nil
+})
 
 // 10 items -> 10/4 -> 3 items per bucket, 3,3,3,1 will be processed in 4 gorutine
 data := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}

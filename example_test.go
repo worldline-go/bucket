@@ -22,7 +22,7 @@ func ExampleBucket() {
 		return nil
 	}
 
-	processBucket := bucket.New(process,
+	processBucket := bucket.New[int](
 		bucket.WithProcessCount(4),
 		bucket.WithMinSize(2),
 		bucket.WithMaxSize(100),
@@ -38,7 +38,7 @@ func ExampleBucket() {
 	data := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 
 	// process data
-	if err := processBucket.Process(context.Background(), data); err != nil {
+	if err := processBucket.CallBack(process).Process(context.Background(), data); err != nil {
 		fmt.Println(err)
 	}
 

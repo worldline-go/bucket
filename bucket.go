@@ -14,15 +14,21 @@ type Bucket[T any] struct {
 	processCount int
 }
 
-func New[T any](fn func(context.Context, []T) error, opts ...Option) *Bucket[T] {
+func New[T any](opts ...Option) *Bucket[T] {
 	o := apply(opts)
 	size := bucketSizer(o)
 
 	return &Bucket[T]{
-		callback:     fn,
 		size:         size,
 		processCount: o.ProcessCount,
 	}
+}
+
+// CallBack will set the function that will be called for each bucket.
+func (b Bucket[T]) CallBack(callback func(context.Context, []T) error) *Bucket[T] {
+	b.callback = callback
+
+	return &b
 }
 
 // Process will process the data concurrently based on the ProcessCount.
